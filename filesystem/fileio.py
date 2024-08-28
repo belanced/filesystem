@@ -1,3 +1,4 @@
+from .path import Path
 import json
 import xml.etree.ElementTree as ET
 from typing_extensions import List, Union
@@ -70,6 +71,19 @@ def read_xml(file_path: str):
     root = tree.getroot()
     return xml_to_dict(root)
 
+def read(path: Path):
+    if not isinstance(path, Path): path = Path(path)
+    
+    ext = path.ext()
+    if ext == 'json':
+        return read_json(path)
+    elif ext == 'xml':
+        return read_xml(path)
+    elif ext == 'txt':
+        return read_txt(path)
+    else:
+        raise NotImplementedError(f'Reading {ext} file is not implemented yet.')
+
 def dump_json(path: str, data: dict, indent=None):
     if isinstance(indent, int) and indent > 0:
         with open(path, 'w') as file:
@@ -87,6 +101,8 @@ def dump_txt(path: str, data: Union[str, List[str]]):
 
     with open(path, 'w') as file:
         file.write(data)
+
+
 
 
     
