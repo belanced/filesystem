@@ -1,0 +1,98 @@
+import os, glob
+from typing_extensions import List, Self
+
+def parse_filepath(path: str) -> List[str]:
+    els = path.split('/')
+    valid_els = []
+    for el in els:
+        if el == '.': continue
+        elif el == '..': valid_els.pop()
+        elif el == '~': valid_els.append(os.environ['HOME'])
+        else: valid_els.append(el)
+    newpath = '/'.join(valid_els)
+    return os.path.abspath(newpath)
+
+
+class Path(str):
+    path: str
+
+    def __init__(self, path: str=None):
+        if path is None:
+            self.path = os.getcwd()
+            return 
+
+        self.path = parse_filepath(path)
+
+    def __str__(self) -> str:
+        return self.path
+
+    def __repr__(self) -> str:
+        return str(self)
+    
+    def __truediv__(self, other: str) -> Self:
+        return Path(os.path.join(self.path, other))
+    
+    @staticmethod
+    def cwd() -> Self:
+        return Path(os.getcwd())
+    
+    @staticmethod
+    def home() -> Self:
+        return Path(os.environ['HOME'])
+    
+    def isabspath(self) -> bool:
+        return self.path[0] == '/'
+    
+    def basename(self) -> str: 
+        return os.path.basename(self.path)
+    
+    def stem(self) -> str:
+        els = self.basename().split('.')
+        return '.'.join(els[:-1])
+    
+    def ext(self) -> str:
+        return self.basename().split('.')[-1]
+    
+    def dirname(self) -> str:
+        return os.path.dirname(self.path)
+    
+    def parent(self) -> Self:
+        return Path(self.dirname())
+    
+    def children(self) -> List[Self]:
+        '''
+        Returns:
+            List[Path]: The children of the current path.
+        '''
+        els = os.listdir(self.path)
+        return sorted([Path(os.path.join(self.path, el)) for el in els])
+    
+    def exists(self) -> bool:
+        return os.path.exists(self.path)
+    
+    def isfile(self) -> bool:
+        return os.path.isfile(self.path)
+    
+    def isdir(self) -> bool:
+        return os.path.isdir(self.path)
+    
+    def islink(self) -> bool:
+        return os.path.islink(self.path)
+    
+    def listdir(self) -> List[str]:
+        return os.listdir(self.path)
+    
+    def glob(self, pattern: str) -> List[Self]:
+        els = glob.glob(os.path.join(self.path, pattern), recursive=True)
+        return sorted([Path(el) for el in els])
+    
+    def mkdir(self):
+        os.makedirs(self.path, exist_ok=True)
+
+    def copy(self, dst: str, verbose: bool=True):
+        opt = '-rfv' if verbose else '-rf'
+        os.system(f'cp {opt} {self.path} {dst}')
+
+    def remove(self, verbose: bool=True):
+        opt = '-rfv' if verbose else '-rf'
+        os.system(f'rm {opt} {self.path}')
