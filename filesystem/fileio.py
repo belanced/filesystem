@@ -6,8 +6,8 @@ from typing_extensions import List, Union
 
 def read_json(path: str):
     data = None
-    with open(path, 'r') as file:
-        data = json.loads(file)
+    with open(path, 'r', encoding='UTF-8') as file:
+        data = json.load(file)
     return data
 
 def read_txt(path: str) -> List[str]:
@@ -99,7 +99,7 @@ def dump_json(path: str, data: dict, indent=4):
             # json.dump(data, file)
     
 def dump_xml(path: str, data: dict):
-    dump_xml(path, data)
+    raise NotImplementedError
 
 def dump_txt(path: str, data: Union[str, List[str]]):
     if isinstance(data, list):
