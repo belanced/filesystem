@@ -91,10 +91,12 @@ def read(path: Path):
 def dump_json(path: str, data: dict, indent=None):
     if isinstance(indent, int) and indent > 0:
         with open(path, 'w') as file:
-            json.dump(data, file, indent)
+            file.write(json.dumps(data, ensure_ascii=False))
+            # json.dump(data, file, indent)
     else:
         with open(path, 'w') as file:
-            json.dump(data, file)
+            file.write(json.dumps(data, ensure_ascii=False))
+            # json.dump(data, file)
     
 def dump_xml(path: str, data: dict):
     dump_xml(path, data)
