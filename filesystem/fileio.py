@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import xmltodict
 from typing_extensions import List, Union
 
-def read_json(path: str):
+def read_json(path: str) -> dict:
     data = None
     with open(path, 'r', encoding='UTF-8') as file:
         data = json.load(file)
