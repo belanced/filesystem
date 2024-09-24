@@ -88,10 +88,10 @@ def read(path: Path):
     else:
         raise NotImplementedError(f'Reading {ext} file is not implemented yet.')
 
-def dump_json(path: str, data: dict, indent=None):
+def dump_json(path: str, data: dict, indent=4):
     if isinstance(indent, int) and indent > 0:
         with open(path, 'w') as file:
-            file.write(json.dumps(data, ensure_ascii=False))
+            file.write(json.dumps(data, ensure_ascii=False, indent=4))
             # json.dump(data, file, indent)
     else:
         with open(path, 'w') as file:
