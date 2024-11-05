@@ -40,6 +40,21 @@ class Path(str):
     def home() -> Self:
         return Path(os.environ['HOME'])
     
+    @staticmethod
+    def proj() -> Self:
+        current_dir = Path.cwd()
+        parent_dirs = [current_dir]
+        while True:
+            upper_dir = parent_dirs[-1].parent()
+            parent_dirs.append(upper_dir)
+            if current_dir == '/': break
+        
+        parent_dirs = parent_dirs[::-1]
+        for this_dir in parent_dirs:
+            if '.git' in parent_dirs.listdir():
+                return this_dir
+        return Path.cwd()
+    
     def isabspath(self) -> bool:
         return self.path[0] == '/'
     
