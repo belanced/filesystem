@@ -51,7 +51,7 @@ class Path(str):
         
         parent_dirs = parent_dirs[::-1]
         for this_dir in parent_dirs:
-            if '.git' in parent_dirs.listdir():
+            if '.git' in this_dir.listdir():
                 return this_dir
         return Path.cwd()
     
