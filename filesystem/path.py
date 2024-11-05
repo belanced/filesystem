@@ -48,7 +48,7 @@ class Path(str):
             upper_dir = parent_dirs[-1].parent()
             parent_dirs.append(upper_dir)
             print(f'upper_dir: {upper_dir}')
-            if current_dir == '/': break
+            if upper_dir == '/': break
         
         parent_dirs = parent_dirs[::-1]
         for this_dir in parent_dirs:
