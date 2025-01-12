@@ -2,6 +2,7 @@ from .path import Path
 import json
 import xml.etree.ElementTree as ET
 import xmltodict
+from omegaconf import OmegaConf as Conf
 from typing_extensions import List, Union
 
 def read_json(path: str) -> dict:
@@ -19,6 +20,25 @@ def read_txt(path: str) -> List[str]:
             line = line.replace('\n', '')
             if len(line) > 0: valid_lines.append(line)
     return valid_lines
+
+def read_yaml(file_path: str):
+    cfg = Conf.load(file_path)
+    return cfg
+
+def read(path: Path):
+    if not isinstance(path, Path): path = Path(path)
+    
+    ext = path.ext()
+    if ext == 'json':
+        return read_json(path)
+    elif ext == 'xml':
+        return read_xml(path)
+    elif ext == 'txt':
+        return read_txt(path)
+    elif ext in ['yaml', 'yml']:
+        return read_yaml(path)
+    else:
+        raise NotImplementedError(f'Reading {ext} file is not implemented yet.')
 
 # def xml_to_dict(element):
 #     '''
