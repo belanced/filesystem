@@ -1,3 +1,4 @@
 typing_extensions
 xmltodict
 omegaconf
+pickle
