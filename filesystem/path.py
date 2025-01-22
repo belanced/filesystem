@@ -1,5 +1,5 @@
 import os, glob
-from typing_extensions import List, Self
+from typing_extensions import List
 
 def parse_filepath(path: str) -> List[str]:
     els = path.split('/')
@@ -29,19 +29,19 @@ class Path(str):
     def __repr__(self) -> str:
         return str(self)
     
-    def __truediv__(self, other: str) -> Self:
+    def __truediv__(self, other: str) -> 'Path':
         return Path(os.path.join(self.path, other))
     
     @staticmethod
-    def cwd() -> Self:
+    def cwd() -> 'Path':
         return Path(os.getcwd())
     
     @staticmethod
-    def home() -> Self:
+    def home() -> 'Path':
         return Path(os.environ['HOME'])
     
     @staticmethod
-    def proj() -> Self:
+    def proj() -> 'Path':
         current_dir = Path.cwd()
         parent_dirs = [current_dir]
         while True:
@@ -71,10 +71,10 @@ class Path(str):
     def dirname(self) -> str:
         return os.path.dirname(self.path)
     
-    def parent(self) -> Self:
+    def parent(self) -> 'Path':
         return Path(self.dirname())
     
-    def children(self) -> List[Self]:
+    def children(self) -> List['Path']:
         '''
         Returns:
             List[Path]: The children of the current path.
@@ -97,7 +97,7 @@ class Path(str):
     def listdir(self) -> List[str]:
         return os.listdir(self.path)
     
-    def glob(self, pattern: str) -> List[Self]:
+    def glob(self, pattern: str) -> List['Path']:
         els = glob.glob(os.path.join(self.path, pattern), recursive=True)
         return sorted([Path(el) for el in els])
     
